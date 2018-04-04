@@ -1,3 +1,5 @@
+; Vincent Portelli VLP25
+
 ; 1. insert takes a number and a list of numbers in order and inserts the number in the proper place. 
 (define insert-cps
 	(lambda (x lis exit)
@@ -58,7 +60,7 @@
 		(cond
 			((null? lis) (exit lis))
 			((list? (car lis)) (dup*-cps (cdr lis) (lambda (v) (exit (cons (dup*-cps (car lis) (lambda (z) z) ) (cons (dup*-cps (car lis) (lambda (y) y) ) v) ))) ))
-			(else (dup*-cps (cdr lis) (lambda (v) (exit (cons (car lis) (cons (car lis) v))))))
+			(else              (dup*-cps (cdr lis) (lambda (v) (exit (cons (car lis) (cons (car lis) v))))))
 			)))
 
 (define dup*
@@ -137,9 +139,9 @@
 (define suffix-cc
 	(lambda (a lis break)
 		(cond
-			((null? lis) (break lis))
-			((eq? a (car lis)) );??????????????????????????????????????????????????????????
-			(else (siffix-cc a (cdr lis) break))
+			((null? lis) lis)
+			((eq? a (car lis)) (break (suffix-cc a (cdr lis) break)))
+			(else (cons (car lis) (suffix-cc a (cdr lis) break)))
 			)))
 
 (define suffix
@@ -156,10 +158,10 @@
 (define emptysublists-cc
 	(lambda (a lis break)
 		(cond
-			((null? lis) (break lis))
-			((list? (car lis)) )
-			((eq? a (car lis)) )
-			(else )
+			((null? lis) lis)
+			((list? (car lis)) (cons (emptysublists a (car lis)) (emptysublists-cc a (cdr lis) break)))
+			((eq? a (car lis)) (break '() ))
+			(else (cons (car lis) (emptysublists-cc a (cdr lis) break)) )
 			)))
 
 (define emptysublists

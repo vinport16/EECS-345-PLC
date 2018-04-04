@@ -1,0 +1,56 @@
+(define randlist ; k = length of list, n = max size, a = prime, b = prime, seed = whatever
+  (lambda (k n a b seed)
+    (if (zero? k)
+        '()
+        (cons (modulo seed n) (randlist (- k 1) n a b (modulo (+ seed a) b))))))
+
+(define insertionsort
+  (lambda (k lis)
+    (cond
+      ((zero? k) '())
+    ((null? lis)
+        lis)
+    (else (insert (car lis) (insertionsort (cdr lis)))))))
+
+(define insert
+  (lambda (a lis)
+    (cond
+      ((null? lis) (cons a lis))
+      ((< a (car lis)) (cons a lis))
+      (else (cons (car lis) (insert a (cdr lis)))))))
+
+
+(define randlist-cps
+  (lambda (k n a b seed return)
+    (if (zero? k)
+        (return '())
+        (randlist-cps (- k 1) n a b (modulo (+ seed a) b) (lambda (v) return (cons (modulo seed n) v))))))
+
+(define insertionsort-cps
+  (lambda (k lis return)
+    (cond
+      ((zero? k) (return '()))
+      ((null? lis) (return lis))
+      (else (insertionsort-cps (- k 1) (cdr lis) (lambda (v) (insert-cps (car lis) v return)))))))
+
+(define insert-cps
+  (lambda (a lis return)
+    (cond
+      ((null? lis) (return (cons a lis)))
+      ((< a (car lis)) (return (cons a lis)))
+      (else (insert-cps a (cdr lis) (lambda (v) (return (cons (car lis)) v)))))))
+
+
+(define randlist-co
+  (lambda (k n a b seed return yield)
+    (if (zero? k)
+        (yield (return '()) (lambda(x y) (randlist-co x n a b seed (lambda (v) v) y)))
+        (randlist-co (- k 1) n a b (modulo (+ seed a) b) (lambda (v) return (cons (modulo seed n) v)) yield))))
+
+(define insertionsort-co
+  (lambda (k lis return yield)
+    (cond
+      ((zero? k) (return '()))
+     ;((null? lis) (yield (data to the randlist) (what I do when control returns) ))
+      ((null? lis) (yield 10 (lambda(l y) (insertionsort-co k l return yield)) ))
+      (else (insertionsort-co (- k 1) (cdr lis) (lambda (v) (insert-cps (car lis) v return)) yield)))))

@@ -1,0 +1,42 @@
+(define myappend
+  ((lambda (m)
+     (m m))
+   (lambda (a)
+     (lambda (lisa lisb)
+       (if (null? lisa)
+           lisb
+           (cons (car lisa) ((a a) (cdr lisa) lisb)))))))
+
+(define myreverse
+  ((lambda (f g)
+     (f f g))
+   (lambda (r)
+     ;reverse
+     (lambda (l)
+       (if (null? l)
+           l
+           ((a a) ((r r) (cdr l)) (cons (car l) '()))))
+     )
+   (lambda (a)
+     ;append
+     (lambda (lisa lisb)
+       (if (null? lisa)
+           lisb
+           (cons (car lisa) ((a a) (cdr lisa) lisb))))
+     )))
+
+; merge
+(define merge
+  ((lambda (f)
+    (f f))
+   (lambda (m)
+     (lambda (lisa lisb)
+       (cond
+         ((null? lisa) lisb)
+         ((null? lisb) lisa)
+         ((< (car lisa) (car lisb)) (cons (car lisa) ((m m) (cdr lisa) lisb)))
+         (else (cons (car lisb) ((m m) (cdr lisb) lisa))))))))
+                                     
+
+; split
+; mergesort
