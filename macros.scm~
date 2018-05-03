@@ -1,0 +1,4 @@
+(define-syntax debug
+  (lambda (syn)
+    (define slist (syntax->list syn))
+    (datum->syntax syn `(begin (print ,(cadr slist) ) ,(cadr slist)))))
